@@ -30,6 +30,18 @@ enum layer_number {
   _LOWER,
   _RAISE,
   _ADJUST,
+  _QWERTY,
+  _L1,
+};
+
+enum {
+  ESC_QWERTY = 0,
+  ESC_COLEMAK
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [ESC_QWERTY] = ACTION_TAP_DANCE_DUAL_ROLE(KC_ESC, _QWERTY),
+  [ESC_COLEMAK] = ACTION_TAP_DANCE_DUAL_ROLE(KC_ESC, _COLEMAK_DH)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -50,10 +62,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_COLEMAK_DH] = LAYOUT( \
-  KC_ESC,          KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                            KC_6,   KC_7,   KC_8,      KC_9,    KC_0,      KC_MINS,            \
-  KC_TAB,          KC_Q,   KC_W,   KC_F,   KC_P,   KC_B,                            KC_J,   KC_L,   KC_U,      KC_Y,    KC_SCLN,   KC_EQL,             \
-  KC_LSPO,         KC_A,   KC_R,   KC_S,   KC_T,   KC_G,                            KC_M,   KC_N,   KC_E,      KC_I,    KC_O,      KC_RSPC,            \
-  LGUI_T(KC_LBRC), KC_Z,   KC_X,   KC_C,   KC_D,   KC_V, KC_AUDIO_MUTE,  KC_QUOT,   KC_K,   KC_H,   KC_COMM,   KC_DOT,  KC_SLSH,   RGUI_T(KC_RBRC),    \
+  TD(ESC_QWERTY),   KC_1,   KC_2,   KC_3,   KC_4,   KC_5,                            KC_6,   KC_7,   KC_8,      KC_9,    KC_0,      KC_MINS,            \
+  KC_TAB,           KC_Q,   KC_W,   KC_F,   KC_P,   KC_B,                            KC_J,   KC_L,   KC_U,      KC_Y,    KC_SCLN,   KC_EQL,             \
+  KC_LSPO,          KC_A,   KC_R,   KC_S,   KC_T,   KC_G,                            KC_M,   KC_N,   KC_E,      KC_I,    KC_O,      KC_RSPC,            \
+  LGUI_T(KC_LBRC),  KC_Z,   KC_X,   KC_C,   KC_D,   KC_V, KC_AUDIO_MUTE,  KC_QUOT,   KC_K,   KC_H,   KC_COMM,   KC_DOT,  KC_SLSH,   RGUI_T(KC_RBRC),    \
                             KC_LCTRL, KC_LALT, MO(_LOWER), KC_SPC,          KC_ENT, MO(_RAISE), KC_BSPC, KC_RALT \
 ),
 /* LOWER
@@ -113,13 +125,57 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
-  [_ADJUST] = LAYOUT( \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
-                             _______, _______, _______, _______, _______,  _______, _______, _______ \
-  )
+[_ADJUST] = LAYOUT( \
+XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
+XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
+                           _______, _______, _______, _______, _______,  _______, _______, _______ \
+),
+/* QWERTY
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * | ESC  |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |BackSP|
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * | Tab  |   Q  |   W  |   E  |   R  |   T  |                    |   Y  |   U  |   I  |   O  |   P  |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |  L1  |   A  |   S  |   D  |   F  |   G  |-------.    ,-------|   H  |   J  |   K  |   L  |   ;  |  '   |
+ * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
+ * |LShift|   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   N  |   M  |   ,  |   .  |   /  |RShift|
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   | LCtrl| LAlt |LGUI  | /Space  /       \Enter \  | L1   |      |      |
+ *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+
+[_QWERTY] = LAYOUT( \
+    TD(ESC_COLEMAK),  KC_1,   KC_2,    KC_3,     KC_4,    KC_5,                       KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
+    KC_TAB,           KC_Q,   KC_W,    KC_E,     KC_R,    KC_T,                       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    XXXXXXX, \
+    MO(_L1),          KC_A,   KC_S,    KC_D,     KC_F,    KC_G,                       KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
+    KC_LSFT,          KC_Z,   KC_X,    KC_C,     KC_V,    KC_B,    XXXXXXX,  XXXXXXX, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, \
+                                     KC_RCTRL, KC_LALT, KC_LGUI, KC_SPC,   KC_ENT,  MO(_L1), XXXXXXX, XXXXXXX \
+),
+/* QWERTY- Layer 1
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |      |      |      |      |      |      |                    |      |      |      |      |   -  |   =  |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |      |      |  Up  |      |      |      |                    |      |      |      |      |   [  |   ]  |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |      | Left | Down | Right|      |      |-------.    ,-------|      |      |      |      |      |   \  |
+ * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
+ * |LShift|  `   |      |      |      |      |-------|    |-------|      |      |      |      |      |RShift|
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   |      |      |      | /Space  /       \Enter \  |      |      |      |
+ *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+
+[_L1] = LAYOUT( \
+    XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MINS, KC_EQL, \
+    XXXXXXX,  XXXXXXX,  KC_UP,    XXXXXXX,  XXXXXXX,  XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, \
+    XXXXXXX,  KC_LEFT,  KC_DOWN,  KC_RIGHT, XXXXXXX,  XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSLASH, \
+    KC_LSFT,  KC_GRV,   XXXXXXX,  XXXXXXX,  XXXXXXX,  XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_RSFT, \
+                                  XXXXXXX,  XXXXXXX,  XXXXXXX, KC_SPC,   KC_ENT,  XXXXXXX, XXXXXXX, XXXXXXX \
+)
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -139,45 +195,6 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
   return true;
 }
 #endif
-
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-
-  switch (keycode) {
-    case _COLEMAK_DH:
-      if (record->event.pressed) {
-        set_single_persistent_default_layer(_COLEMAK_DH);
-      }
-      return false;
-      break;
-    case _LOWER:
-      if (record->event.pressed) {
-        layer_on(_LOWER);
-      } else {
-        layer_off(_LOWER);
-      }
-      return false;
-      break;
-    case _RAISE:
-      if (record->event.pressed) {
-        layer_on(_RAISE);
-      } else {
-        layer_off(_RAISE);
-      }
-      return false;
-      break;
-    case _ADJUST:
-      if (record->event.pressed) {
-        layer_on(_ADJUST);
-      } else {
-        layer_off(_ADJUST);
-      }
-      return false;
-      break;
-  }
-
-  return true;
-}
 
 //
 // Rotate OLED display
@@ -336,7 +353,7 @@ static void render_anim(void) {
 //
 // OLED display rendering
 //
-void oled_task_user(void) {
+bool oled_task_user(void) {
   if (is_keyboard_master()) {
     // Left side
     render_status();
@@ -344,4 +361,5 @@ void oled_task_user(void) {
     // Right side
     render_anim();
   }
+  return false;
 }
