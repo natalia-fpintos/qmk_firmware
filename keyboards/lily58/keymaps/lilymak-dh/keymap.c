@@ -227,13 +227,23 @@ static void render_status(void) {
   oled_write_P(PSTR("\n      LAYER "), false);
 
   switch (get_highest_layer(layer_state)) {
-    // Layer 1
     case 1:
-      oled_write_P(PSTR("  1"), false);
+      oled_write_P(PSTR("  Lower   "), false);
       break;
-      // Layer 0
+    case 2:
+      oled_write_P(PSTR("  Raise   "), false);
+      break;
+    case 3:
+      oled_write_P(PSTR("  Adjust  "), false);
+      break;
+    case 4:
+      oled_write_P(PSTR("  QWERTY  "), false);
+      break;
+    case 5:
+      oled_write_P(PSTR("  L1      "), false);
+      break;
     default:
-      oled_write_P(PSTR("  0"), false);
+      oled_write_P(PSTR("  Colemak "), false);
       break;
   }
 
